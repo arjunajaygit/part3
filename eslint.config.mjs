@@ -1,20 +1,24 @@
 import globals from "globals";
-import stylisticJs from '@stylistic/eslint-plugin-js'
-import js from '@eslint/js'
+import pluginReact from "eslint-plugin-react";
+import stylisticJs from '@stylistic/eslint-plugin-js';
+import js from '@eslint/js';
 
+/** @type {import('eslint').Linter.Config[]} */
 export default [
   js.configs.recommended,
   {
-    files: ["**/*.js"],
+    files: ["**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
       sourceType: "commonjs",
       globals: {
         ...globals.node,
+        ...globals.browser,
       },
       ecmaVersion: "latest",
     },
     plugins: {
-      '@stylistic/js': stylisticJs
+      '@stylistic/js': stylisticJs,
+      'react': pluginReact,
     },
     rules: {
       '@stylistic/js/indent': [
@@ -44,7 +48,8 @@ export default [
       'no-console': 'off',
     },
   },
+  pluginReact.configs.flat.recommended,
   { 
     ignores: ["dist/**", "build/**"],
   },
-]
+];

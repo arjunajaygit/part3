@@ -1,19 +1,18 @@
+// filepath: /Users/arjun/Desktop/part3/mongo.js
 const mongoose = require('mongoose')
+require('dotenv').config()
 
-if (process.argv.length<3) {
-  console.log('give password as argument')
-  process.exit(1)
-}
+const url = process.env.MONGODB_URI
 
-
-const password = process.argv[2]
-
-const url =
-  `mongodb+srv://amarjeetakskumar:${password}@phonebook.4k1mp.mongodb.net/?retryWrites=true&w=majority&appName=phonebook`
-
-mongoose.set('strictQuery',false)
+mongoose.set('strictQuery', false)
 
 mongoose.connect(url)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.error('error connecting to MongoDB:', error.message)
+  })
 
 const personSchema = new mongoose.Schema({
   name: String,
@@ -22,10 +21,10 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-if(process.argv.length > 3){
+if (process.argv.length > 3) {
   const person = new Person({
-    name: process.argv[3],
-    number: process.argv[4]
+    name: process.argv[2],
+    number: process.argv[3]
   })
 
   person.save().then((person) => {
@@ -33,7 +32,7 @@ if(process.argv.length > 3){
     mongoose.connection.close()
   })
 
-}else{
+} else {
   Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person)
@@ -41,4 +40,3 @@ if(process.argv.length > 3){
     mongoose.connection.close()
   })
 }
-
